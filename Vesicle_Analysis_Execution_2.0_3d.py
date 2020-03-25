@@ -37,7 +37,7 @@ image = f['561 Channel'][:]
 
 intensity_image = f['488 Channel'][:]
 
-#image = image + intensity_image
+image = image + intensity_image
 
 time_len = simpledialog.askinteger("Input", "How long is the movie in minutes? ",
                                                  parent=root,

@@ -29,79 +29,7 @@ from skimage import draw
 import mplcursors
 
 warnings.simplefilter("ignore",FutureWarning)
-'''
-def fit_circle_contour (image,pt,width=20,height=20,intensity_norm = 600):
 
-    #binary_shell,r,center = draw_GUV_contour(image,pt,3,width,3.0)
-
-    try:
-      _,r,_ = draw_GUV_contour(image,pt,3,width,3.0,intensity_norm)
-
-      if r >= 0.4*width and r <= 1.4*width:
-        width = r + 2
-
-    except:
-      pass
-
-    try:
-      sample_points = circle_edge_detector(pt,width, image)
-
-      if len(sample_points) <= 25:
-        binary_shell,r,center = draw_GUV_contour(image,pt,3,width,3.0)
-
-      else:
-         model_robust, inliers = ransac(sample_points, CircleModel,min_samples=3,residual_threshold=2,max_trials=1000)
-         y,x,r = model_robust.params
-         center = (x,y)
-         binary_shell = generate_binary_shell(center, r, 1.5)
-
-         if r >= 1.2 *width or r <=0.4 * width:
-           binary_shell,r,center= draw_GUV_contour(image,pt,3,width,3.0,intensity_norm)
-
-    except:
-      pass
-      binary_shell,r,center= draw_GUV_contour(image,pt,3,width,3.0,intensity_norm)
-
-    return (center,r,binary_shell)
-
-# define a function to find the border of a circle (assume the edge is the brightest)
-def circle_edge_detector(center, distance, image):
-    theta = np.linspace(0., 2*np.pi,100)
-    x0,y0 = center
-
-    x_list = distance*np.cos(theta) + x0
-    y_list = distance*np.sin(theta) + y0
-    end_list = np.zeros(theta.shape, dtype = (float, 2))
-
-    for n in range(len(theta)):
-        end = (x_list[n],y_list[n])
-        end_list[n,:] = end
-
-    x_edge_list = []
-    y_edge_list = []
-
-    for n in range(end_list.shape[0]):
-        end = end_list[n,:]
-        lineprofile, x,y = line_pixel_extractor(center, end, 1000, image)
-        max_num = np.argmax(lineprofile)
-        
-        #plt.plot(lineprofile, '-b')
-        #plt.plot(max_num, lineprofile[max_num], 'ro')
-        #plt.show()
-        
-        test_dist = np.linalg.norm(np.array((x[max_num], y[max_num])) - center)
-
-        if test_dist >= 0.7*distance and test_dist <= 1.4*distance:
-          x_edge_list.append(x[max_num])
-          y_edge_list.append(y[max_num])
-
-
-    edge_list = np.column_stack([np.array(y_edge_list),np.array(x_edge_list)])
-
-
-    return edge_list
-
-'''
 # function to select seed for watershed function
 def get_seed_from_MI_frame(bw,point):
 
@@ -189,7 +117,7 @@ def draw_GUV_contour_3d(img_stk, point,mid_num,width,dist,factor,intensity_norm)
     Crop_list = np.array(Crop_list)
 
     Crop_list = intensity_normalization(Crop_list,[intensity_norm])
-
+    Crop_list = image_smoothing_gaussian_3d(Crop_list,0.5)
 
     seed = get_3dseed_from_mid_frame(Crop_list,point = (1.4*dist,1.4*dist,mid_num)).astype(int)
     
@@ -222,17 +150,7 @@ def mid_frame_picker_area(img_stack,point):
    max_area_list = []
    eccentricity_list = []
    MI = np.max(img_stack, axis = 0)
-   #plt.imshow(MI)
-   #plt.scatter(point[0],point[1],color = 'red')
-   #plt.show()
-
-   #f2_param = [[0.5, 0.5]]
-   #bw = filament_2d_wrapper(MI,f2_param)
-   #bw = remove_small_objects(bw>0, 100)
-   #bw = binary_fill_holes(bw).astype(int)
-
-   #plt.imshow(bw)
-   #plt.show()
+  
    seed = get_seed_from_MI_frame(MI,point).astype(int)
 
    bw_shell_list = []
@@ -449,34 +367,7 @@ def generate_df_from_list_single_plane(pixel_attribute,total_time, center_list,r
     stat_df = pd.DataFrame(stat_dict)
 
     return stat_df
-'''
-def draw_sample_points (image,Position,distance):
-    mask = creating_mask(image,Position,width=distance,height=distance)
-    local_thresh = threshold_otsu(image)
-    binary_im = image > local_thresh
 
-    closing_im = morphology.closing(binary_im)
-
-
-    edges = feature.canny(closing_im,sigma=0.5)
-    edges = edges * mask
-
-    points = np.column_stack(np.nonzero(edges))
-
-
-    return points
-
-#Define a function to obtain all pixels in a line
-def line_pixel_extractor(start,end,num,image):
-    x0,y0=start
-    x1,y1 =end
-    x,y = np.linspace(x0,x1,num),np.linspace(y0,y1,num)
-
-    zi = ndimage.map_coordinates(image,np.vstack((y,x)))
-
-    return zi,x,y
-
-'''
 def obtain_ring_pixel(image, shell_binary):
     where = np.where(shell_binary==True)
 
@@ -509,6 +400,7 @@ def mid_slice_picker(img_stack,center, dist,intensity_norm):
    Crop_list = np.array(Crop_list)
 
    Crop_list = intensity_normalization(Crop_list,[intensity_norm])
+   Crop_list = image_smoothing_gaussian_3d(Crop_list,0.5)
 
    '''
    fig = plt.figure(figsize=(18,8))

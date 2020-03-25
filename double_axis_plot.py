@@ -34,15 +34,15 @@ print(df)
 
 Time = df['Time Point'].values
 
-Time = np.linspace(0, 1500, num = len(Time))
+Time = np.linspace(0, 35, num = len(Time))
 
 print(Time)
 
-radius = df['radius_micron'].values
-
+#radius = df['radius_micron'].values
+volume = df['volume_micron_cube'].values
 #volume = df['Cell Volume'].values
-GFP_Intensity = df['Normalized GFP intensity'].values
-
+#GFP_Intensity = df['Normalized GFP intensity'].values
+'''
 # Find the indices of max bindings and subset the data only include decay points
 max_ind = np.argmax(GFP_Intensity)
 
@@ -53,19 +53,19 @@ decay_radius = radius[max_ind:]
 
 for n in range(len(decay_Time)):
     decay_Time[n] = n * 10
-
+'''
 fig, ax1 = plt.subplots()
 
-ax1.set_xlabel('Time Points (secs)', fontsize = 16, fontweight = 'bold')
+ax1.set_xlabel('Time Points (min)', fontsize = 16, fontweight = 'bold',color = 'k')
 #ax1.set_ylabel('Cpla2 C2 Bindings', fontsize = 16,fontweight = 'bold',color ='r')
-ax1.set_ylabel('Radius (um)', fontsize = 16,fontweight = 'bold',color = 'm')
+ax1.set_ylabel('GUV Volume (um^3)', fontsize = 16,fontweight = 'bold',color = 'k')
 
-plt1 = ax1.plot(decay_Time, decay_radius,'mo-', markersize=10, linewidth=2)
+plt1 = ax1.plot(Time, volume,'bo-', markersize=10, linewidth=6)
 #plt1 = ax1.plot(Time, radius, 'b-')
 
-ax1.tick_params(axis = 'y', labelcolor = 'm',labelsize = 'x-large')
-#ax1.tick_params(axis = 'x',  labelsize = 'x-large',labelcolor = 'r')
-
+ax1.tick_params(axis = 'y', labelcolor = 'k',labelsize = 'x-large')
+ax1.tick_params(axis = 'x',  labelsize = 'x-large',labelcolor = 'k')
+'''
 ax2 = ax1.twinx()
 #x2.set_ylim((80,150))
 ax2.set_xlabel('Time Points (min)', fontsize = 16, fontweight = 'bold')
@@ -84,7 +84,7 @@ ax2.plot(np.linspace(decay_Time[0],decay_Time[-1],400000), func(np.linspace(deca
 print(popt)
 
 plt_total = plt2 + plt1
-
+'''
 fig.tight_layout()
 #plt.show()
 

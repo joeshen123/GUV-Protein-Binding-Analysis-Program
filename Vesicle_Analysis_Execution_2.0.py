@@ -71,9 +71,9 @@ def pt_dist_extractor(line_data_list):
 
 with napari.gui_qt():
     viewer = napari.Viewer()
-    viewer.add_image(image, name='561', colormap='red',blending = 'opaque')
-    viewer.add_image(intensity_image,name='488',colormap='green',blending = 'additive')
-    line_layer = viewer.add_shapes(shape_type='line', edge_width=1.5, face_color = 'blue', edge_color = 'b')
+    viewer.add_image(image, name='561', colormap='red',blending = 'opaque', scale = [8,1,1])
+    viewer.add_image(intensity_image,name='488',colormap='green',blending = 'additive', scale = [8,1,1])
+    line_layer = viewer.add_shapes(shape_type='line', edge_width=1.5, face_color = 'blue', edge_color = 'b', scale = [8,1,1])
 
     # Stop the program for updating shape layer
     input("Press Enter to continue...")
@@ -82,7 +82,7 @@ with napari.gui_qt():
     point_list, line_list,z_list= pt_dist_extractor(line_data)
     Analysis_Stack = Image_Stacks(image,intensity_image,point_list,line_list,z_list,600,time_len)
     Analysis_Stack.tracking_multiple_circles()
-    viewer.add_image(Analysis_Stack.binary_shell_list,name='Mid Plane Contour', blending = 'additive')
+    viewer.add_image(Analysis_Stack.binary_shell_list,name='Mid Plane Contour', blending = 'additive', scale = [8,1,1])
 
 
 
