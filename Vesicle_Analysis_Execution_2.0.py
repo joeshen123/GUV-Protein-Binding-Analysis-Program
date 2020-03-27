@@ -80,7 +80,7 @@ with napari.gui_qt():
     line_data = line_layer.data
 
     point_list, line_list,z_list= pt_dist_extractor(line_data)
-    Analysis_Stack = Image_Stacks(image,intensity_image,point_list,line_list,z_list,600,time_len)
+    Analysis_Stack = Image_Stacks(image,intensity_image,point_list,line_list,z_list,2000,time_len)
     Analysis_Stack.tracking_multiple_circles()
     viewer.add_image(Analysis_Stack.binary_shell_list,name='Mid Plane Contour', blending = 'additive', scale = [8,1,1])
 
@@ -122,3 +122,10 @@ for df in GUV_Post_Analysis_df_list:
     key_tag = 'df_' + str(n)
     df.to_hdf(save_name, key = key_tag, complib='zlib', complevel=5)
     n += 1
+
+#Save the segmentation Binary Result for downstream analysis
+seg_save_name='{File_Name}_segmentation_result_2D.hdf5'.format(File_Name = File_save_names)
+
+with h5py.File(seg_save_name, "w") as f:
+      f.create_dataset('Segmentation_Binary_Result', data = Analysis_Stack.binary_shell_list, compression = 'gzip')
+      

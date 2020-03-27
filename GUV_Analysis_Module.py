@@ -99,6 +99,7 @@ def draw_GUV_contour(img, point, width,dist,factor,intensity_norm):
 
     index = np.argmax([r.area for r in region])
     #eccentricity = np.min([r.eccentricity for r in region])
+    
     radius = np.sqrt(region[index].area / math.pi)
     center = (region[index].centroid[1], region[index].centroid[0])
     return bw_shell_output,radius, center
@@ -457,6 +458,7 @@ class Image_Stacks:
         r_list = []
         GFP_list = []
         z_num_list = []
+        
         self.point = self.point_list[num]
         #print(num_len)
         pb = tqdm(range(num_len), bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.LIGHTCYAN_EX, Fore.RESET))
@@ -517,16 +519,11 @@ class Image_Stacks:
              if n != 0:
                 r = r_list[-1]
                 binary_shell_temp = binary_shell
-             else:
-                #print('None Exception')
-                r = self.dist[num]
 
            binary_shell = binary_shell_temp
            self.point = center
            center_list.append(center)
            r_list.append(r)
-
-
 
            #print(z_num)
            Intensity = obtain_ring_pixel(Median_Intensity_Slice,binary_shell)
@@ -537,6 +534,15 @@ class Image_Stacks:
 
            z_num += 1
            z_num_list.append(z_num)
+        
+        # Check and exchange 1st measurement (if it is way too off) to the first correct measurement.
+        if r_list[0] < 0.15*self.dist[num]:
+           for n in range(1,num_len + 1):
+              r_list[0:n] = [r_list[n]] * (n - 0)
+              self.binary_shell_list[0:n] = [self.binary_shell_list[n]] * (n-0)
+              center_list[0:n] = [center_list[n]] * (n - 0)
+              if r_list[n] >0.15*self.dist[num]:
+                break
 
         stats_df = generate_df_from_list(self.Micron_Pixel,self.time_len, center_list,r_list,GFP_list, z_num_list)
 
@@ -623,11 +629,13 @@ class Image_Stacks:
         if volume_list[0] <12000:
             for n in range(1,num_len + 1):
                volume_list[0:n] = [volume_list[n]] * (n - 0)
+               self.binary_shell_list[0:n] = [self.binary_shell_list[n]] * (n-0)
+               center_list[0:n] = [center_list[n]] * (n - 0)
                if volume_list[n] >12000:
                  break
 
                 
-            self.binary_shell_list[0,:,:,:] = self.binary_shell_list[1,:,:,:]
+            
             
         stats_df = generate_df_from_list_3D(self.time_len, center_list,volume_list, z_num_list, self.Volume_Micron_Cube)
 

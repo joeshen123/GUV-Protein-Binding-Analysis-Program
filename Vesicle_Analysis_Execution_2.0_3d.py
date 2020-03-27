@@ -108,7 +108,7 @@ while del_answer == True:
 
 
 File_save_names = '.'.join(file_name.split(".")[:-1])
-list_save_name='{File_Name}_analysis'.format(File_Name = File_save_names)
+list_save_name='{File_Name}_analysis_3d'.format(File_Name = File_save_names)
 
 # save as csv
 csv_save_name = list_save_name + '.csv'
@@ -120,5 +120,12 @@ n = 1
 for df in GUV_Post_Analysis_df_list:
     save_name = list_save_name +'.hdf5'
     key_tag = 'df_' + str(n)
-    df.to_hdf(save_name, key = key_tag, complib='zlib', complevel=5)
+    df.to_hdf(save_name, key = key_tag, complib='zlib', complevel=5) 
     n += 1
+
+#Save the segmentation Binary Result for downstream analysis
+seg_save_name='{File_Name}_segmentation_result_3D.hdf5'.format(File_Name = File_save_names)
+
+with h5py.File(seg_save_name, "w") as f:
+      f.create_dataset('Segmentation_Binary_Result', data = Analysis_Stack.binary_shell_list, compression = 'gzip')
+      

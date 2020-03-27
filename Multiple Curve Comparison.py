@@ -22,31 +22,7 @@ warnings.simplefilter("ignore",UserWarning)
 warnings.simplefilter("ignore",RuntimeWarning)
 
 
-def Extract_df_mean(directory):
-    os.chdir(directory)
 
-    df_list = []
-
-    df_filenames = glob.glob('*analysis.hdf5' )
-
-
-
-    for n in range(len(df_filenames)):
-       df_name = df_filenames[n]
-       store = HDFStore(df_name)
-
-       for key in store.keys():
-          df = store[key]
-
-          df_list.append(df)
-
-       store.close()
-
-    df_final = pd.concat(df_list)
-
-    intensity_mean = df_final['Normalized GFP intensity'].mean()
-
-    return intensity_mean
 
 
 # Make a function to combine all df together into one df. Input is the directory of all dfs
@@ -90,13 +66,6 @@ label_1 = Name1.split("/")[-1]
 df_final_one,df_final_one_len = curve_df_combine(Name1)
 
 print(df_final_one)
-
-#by_row_index = df_final_one.groupby(df_final_one.index)
-#df_means_control = by_row_index.mean()
-#root.directory = filedialog.askdirectory()
-
-#df_mean2 = Extract_df_mean(root.directory)
-
 
 root.directory = filedialog.askdirectory()
 Name2 = root.directory

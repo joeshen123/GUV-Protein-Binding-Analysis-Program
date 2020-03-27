@@ -38,11 +38,11 @@ Time = np.linspace(0, 35, num = len(Time))
 
 print(Time)
 
-#radius = df['radius_micron'].values
-volume = df['volume_micron_cube'].values
+radius = df['radius_micron'].values
+#volume = df['volume_micron_cube'].values
 #volume = df['Cell Volume'].values
-#GFP_Intensity = df['Normalized GFP intensity'].values
-'''
+GFP_Intensity = df['Normalized GFP intensity'].values
+
 # Find the indices of max bindings and subset the data only include decay points
 max_ind = np.argmax(GFP_Intensity)
 
@@ -53,19 +53,19 @@ decay_radius = radius[max_ind:]
 
 for n in range(len(decay_Time)):
     decay_Time[n] = n * 10
-'''
+
 fig, ax1 = plt.subplots()
 
 ax1.set_xlabel('Time Points (min)', fontsize = 16, fontweight = 'bold',color = 'k')
 #ax1.set_ylabel('Cpla2 C2 Bindings', fontsize = 16,fontweight = 'bold',color ='r')
-ax1.set_ylabel('GUV Volume (um^3)', fontsize = 16,fontweight = 'bold',color = 'k')
+ax1.set_ylabel('GUV Radius (um)', fontsize = 16,fontweight = 'bold',color = 'm')
 
-plt1 = ax1.plot(Time, volume,'bo-', markersize=10, linewidth=6)
+plt1 = ax1.plot(decay_Time, decay_radius,'mo', markersize=10, linewidth=6)
 #plt1 = ax1.plot(Time, radius, 'b-')
 
-ax1.tick_params(axis = 'y', labelcolor = 'k',labelsize = 'x-large')
+ax1.tick_params(axis = 'y', labelcolor = 'm',labelsize = 'x-large')
 ax1.tick_params(axis = 'x',  labelsize = 'x-large',labelcolor = 'k')
-'''
+
 ax2 = ax1.twinx()
 #x2.set_ylim((80,150))
 ax2.set_xlabel('Time Points (min)', fontsize = 16, fontweight = 'bold')
@@ -78,13 +78,16 @@ def func(x, a, b,c):
    return a * np.exp(-b*x)+c 
 
 popt, pcov = curve_fit(func, decay_Time,decay_intensity,p0=(1,1e-7,1))
-
+popt1, pcov1 = curve_fit(func, decay_Time,decay_radius,p0=(1,1e-10,1))
 # Plot the fitted curve
+ax1.plot(np.linspace(decay_Time[0],decay_Time[-1],400000), func(np.linspace(decay_Time[0],decay_Time[-1],400000), *popt1),'k--',linewidth=6)
 ax2.plot(np.linspace(decay_Time[0],decay_Time[-1],400000), func(np.linspace(decay_Time[0],decay_Time[-1],400000), *popt),'b--',linewidth=6)
+
 print(popt)
+print(popt1)
 
 plt_total = plt2 + plt1
-'''
+
 fig.tight_layout()
 #plt.show()
 

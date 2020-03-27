@@ -39,6 +39,17 @@ answer = messagebox.askyesno("Question","Does the image contain multiple z stack
 def Z_Stack_Images_Extractor(address, fields_of_view, z_answer):
    Image_Sequence = ND2Reader(address)
    
+   Channel_list = Image_Sequence.metadata['channels']
+
+   # Select correct channels for downstream analysis 
+   if '561' in Channel_list[0]:
+      GUV_Channel = 0
+      Protein_Channel = 1
+
+   else:
+      GUV_Channel = 1
+      Protein_Channel = 0
+
    time_series = Image_Sequence.sizes['t']
    
    if z_answer:
@@ -60,8 +71,8 @@ def Z_Stack_Images_Extractor(address, fields_of_view, z_answer):
        z_stack_images = [] 
        z_stack_Intensity_images = []
        for z_slice in range(z_stack):
-          slice = Image_Sequence.get_frame_2D(c=1, t=time, z=z_slice, v=fields_of_view)
-          Intensity_slice = Image_Sequence.get_frame_2D(c=0, t=time, z=z_slice, v=fields_of_view)
+          slice = Image_Sequence.get_frame_2D(c=GUV_Channel, t=time, z=z_slice, v=fields_of_view)
+          Intensity_slice = Image_Sequence.get_frame_2D(c=Protein_Channel, t=time, z=z_slice, v=fields_of_view)
           z_stack_images.append(slice)
           z_stack_Intensity_images.append(Intensity_slice)
      
