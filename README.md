@@ -1,4 +1,4 @@
-#Analysis Program for analyszing GUV geometry and protein bindings in Time Lapse 3D Confocal Stacks
+# Analysis Program for analyszing GUV geometry and protein bindings in Time Lapse 3D Confocal Stacks
 
 # Brief Overview
 
