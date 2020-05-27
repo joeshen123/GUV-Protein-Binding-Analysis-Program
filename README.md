@@ -17,8 +17,8 @@ The 3D component is very similar to the 2D component. The difference is that ins
 # Program Components
 The core of this program is in **Core Programs** directory. Table below lists programs in the directory with some brief explanations.
 
-Programs | Purpose of Programs
+Program Nmaes | Functions
 ------------ | -------------
-Content from cell 1 | Content from cell 2
-Content in the first column | Content in the second column
+Image_Import| Import and Convert image from .ND2 tO .HDF5
+GUV_Anaysis_Module | Contain all objects and functions to execute analysis pipelines
 
