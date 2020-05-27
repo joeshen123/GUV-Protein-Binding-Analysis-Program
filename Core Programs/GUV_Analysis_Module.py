@@ -17,7 +17,8 @@ from colorama import Fore
 from skimage import img_as_ubyte
 from scipy.ndimage import gaussian_filter, binary_fill_holes
 from pre_processing_utils import *
-from skimage.morphology import disk, watershed
+from skimage.morphology import disk
+from skimage.segmentation import watershed
 from utils import *
 import warnings
 from scipy.ndimage import gaussian_filter

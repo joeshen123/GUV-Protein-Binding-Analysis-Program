@@ -6,7 +6,6 @@ from tkinter import simpledialog
 from tkinter import filedialog
 from tkinter import messagebox
 import tkinter as tk
-from skimage.external import tifffile
 import matplotlib.pyplot as plt
 from skimage import io
 import cv2

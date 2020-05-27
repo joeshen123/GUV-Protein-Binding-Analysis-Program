@@ -5,7 +5,6 @@ import warnings
 from tkinter import simpledialog
 from tkinter import Tk, Label, Button, Radiobutton, IntVar
 import h5py
-from skimage.external import tifffile
 import numpy as np
 from skimage import transform
 from scipy.ndimage import zoom
