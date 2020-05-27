@@ -17,10 +17,19 @@ The goal of 2D component is to extract protein recruitment/binding intensity and
 The 3D component is very similar to the 2D component. The difference is that instead of performing markers-based watershed algorithm slice by slice, we perform watershed on 3D space and segment GUV as a 3D object rather than accumulation of multiple 2D z stacks. After obtaining the 3D segmented object, we can analyze GUV volume/surface area and plot the changes accross time.
 
 # Program Components
-The core of this program is in **Core Programs** directory. Table below lists programs in the directory with some brief explanations.
+The bulk of this program is in **Core Programs** directory. Lists below give brief introductions of programs within the directory.
 
-Program Nmaes | Functions
------------- | -------------
-Image_Import| Import and Convert image from .ND2 tO .HDF5
-GUV_Anaysis_Module | Contain all objects and functions to execute analysis pipelines
+* **Image_Import.py**: Import and Convert image from .ND2 tO .HDF5
+
+* **GUV_Anaysis_Module**: Contain all objects and functions to execute analysis pipelines
+
+* **pre_processing_utils.py**: Contain intensity normalization and gaussian blur functions that are used in GUV_Analysis_Module. It is adapted and modified from **aics-segmentation** (https://github.com/AllenInstitute/aics-segmentation) 
+
+* **utils.py**: Contain other image operation functions modified from **aics-segmentation** that is used in analysis pipeline.
+
+* **Vesicle_Analysis_Execution_2.0.py**: 2D Version of the analysis pipelines
+
+* **Vesicle_Analysis_Execution_2.0_3d.py**: 3D Version of the analysis pipelines
+
+* **Vesicle_Analysis_Execution_2.0_Single.py**: A simplified 2D Version of the analysis pipelines. Input is a single z plane image stack (TYX). Because it is only single z stack, the step of finding mid-slice is skipped. Segmentation is directly applied on GUV channel.
 
