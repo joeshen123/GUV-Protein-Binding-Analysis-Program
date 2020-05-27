@@ -123,14 +123,27 @@ def draw_GUV_contour_3d(img_stk, point,mid_num,width,dist,factor,intensity_norm)
     
     bw_filled = watershed(Crop_list, markers=seed, watershed_line=True) > 0
     bw_shell = np.logical_xor(bw_filled, morphology.dilation(bw_filled, selem=ball(width))).astype(int)
-
+    
     #print(bw_shell_output[int(round(Y)):int(round(Y+factor*dist)),int(round(X)):int(round(X + factor * dist))].shape == bw_shell.shape)
 
     bw_shell_filled = binary_fill_holes(bw_shell).astype(int)
     bw_shell_filled_whole = bw_shell_output.copy()
     bw_shell_filled_whole[:,int(round(Y)):int(round(Y+factor*dist)),int(round(X)):int(round(X + factor * dist))] = bw_shell_filled
-
-    bw_shell =  np.logical_xor(bw_shell_filled, morphology.dilation(bw_shell_filled, selem=ball(width))).astype(int)
+    '''
+    fig = plt.figure(figsize=(18,10))
+   
+    for n in range(0,bw_shell.shape[0],1):
+      fig.add_subplot(2, np.ceil(len(bw_shell)/float(1.0)), n/1 + 1)
+      plt.imshow(Crop_list[n,:,:], cmap='gray')
+      plt.axis('off')
+      fig.add_subplot(2, np.ceil(len(bw_shell)/float(1.0)), np.ceil(len(bw_shell)/float(1.0)) + n/1 + 1)
+      #print(n)
+      plt.imshow(bw_shell[n,:,:])
+      plt.axis('off')
+   
+    plt.tight_layout()
+    plt.show()
+    '''
     bw_shell_output[:,int(round(Y)):int(round(Y+factor*dist)),int(round(X)):int(round(X + factor * dist))] = bw_shell
     
   
