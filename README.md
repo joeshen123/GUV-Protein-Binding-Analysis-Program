@@ -42,7 +42,7 @@ I tested the program in both Windows 7 and Mac OS Catalina system (Majority of m
 
 > 2. Install Conda/Miniconda under the [instruction](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) from the website. 
 
-> 3. After successfully install conda, go to the directory where **environment.yml** locate and run **conda env create -f environment.yml**. It may take several minutes to install all the dependancy for the program
+> 3. After successfully install conda, go to the directory where **environment.yml** locate and run **conda env create -f environment.yml**. It may take several minutes to install all the dependancy for the program.
 
 > 4. Now we can activate the specific environment by running **conda activate guv_pipeline_paper**. You should see **(guv_pipline_paper)** on the left of terminal.
 
