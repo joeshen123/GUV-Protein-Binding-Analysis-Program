@@ -48,4 +48,15 @@ I tested the program in both Windows 7 and Mac OS Catalina system (Majority of m
 
 >5. Now you can go into **Core Programs** directory and run **python Vesicle_Analysis_Execution_2.0.py** or **python Vesicle_Analysis_Execution_2.0_3d.py** or **python Vesicle_Analysis_Execution_2.0_Single.py** to start the program. Congratulations!
 
-# Requirements
+# Requirements and Acknowledgement
+I am really grateful for the open source community of python scientific computing. Without these great tools, it is impossible for me to develop the analysis pipeline. Here are the major softwares/tools used in the pipeline:
+
+* [Scikit-Image] (https://scikit-image.org/)
+
+* [nd2reader] (https://rbnvrw.github.io/nd2reader/)
+
+* [aics-segmentation] (https://github.com/AllenInstitute/aics-segmentation)
+
+* [Napari] (https://github.com/napari/napari)
+
+
