@@ -33,3 +33,7 @@ The bulk of this program is in **Core Programs** directory. Lists below give bri
 
 * **Vesicle_Analysis_Execution_2.0_Single.py**: A simplified 2D Version of the analysis pipelines. Input is a single z plane image stack (TYX). Because it is only single z stack, the step of finding mid-slice is skipped. Segmentation is directly applied on GUV channel.
 
+# Installation
+I tested the program in both Windows 7 and Mac OS Catalina system (Majority of my work is performed on Mac OS Catalina). The program uses Python 3.7.
+
+> **1. Download the [environment.yml](environment.yml) 
