@@ -28,20 +28,21 @@ GUV_Post_Analysis_df_list = []
 my_filetypes = [('all files', '.*'),('Image files', '.hdf5')]
 
 filez = filedialog.askopenfilenames(parent = root, title='Please Select a File', filetypes = my_filetypes)
+root.update() # To prevent open file dialog freeze after selecting the file
 
 file_name= root.tk.splitlist(filez)[0]
 
-#f = h5py.File(file_name, 'r')
+f = h5py.File(file_name, 'r')
 
-#image = f['488 Channel'][:]
+image = f['561 Channel'][:]
 
-#intensity_image = f['488 Channel'][:]
-
+intensity_image = f['488 Channel'][:]
+'''
 from skimage import io
 image = io.imread(file_name)
 intensity_image = image
 image = image + intensity_image
-
+'''
 time_len = simpledialog.askinteger("Input", "How long is the movie in minutes? ",
                                                  parent=root,
                                                  minvalue=0, maxvalue=1000)

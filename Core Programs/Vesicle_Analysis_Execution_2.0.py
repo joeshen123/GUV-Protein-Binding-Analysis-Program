@@ -28,6 +28,8 @@ GUV_Post_Analysis_df_list = []
 my_filetypes = [('all files', '.*'),('Image files', '.hdf5')]
 
 filez = filedialog.askopenfilenames(parent = root, title='Please Select a File', filetypes = my_filetypes)
+root.update() # To prevent open file dialog freeze after selecting the file
+
 
 file_name= root.tk.splitlist(filez)[0]
 
