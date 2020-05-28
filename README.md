@@ -36,4 +36,6 @@ The bulk of this program is in **Core Programs** directory. Lists below give bri
 # Installation
 I tested the program in both Windows 7 and Mac OS Catalina system (Majority of my work is performed on Mac OS Catalina). The program uses Python 3.7.
 
-> **1. Download the [environment.yml](environment.yml) 
+> 1. Download the [environment.yml](environment.yml) file from the repository either through copy/paste to text editor of choice or git clone the whole repository into local computer.
+
+>
