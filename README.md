@@ -51,12 +51,12 @@ I tested the program in both Windows 7 and Mac OS Catalina system (Majority of m
 # Requirements and Acknowledgement
 I am really grateful for the open source community of python scientific computing. Without these great tools, it is impossible for me to develop the analysis pipeline. Here are the major softwares/tools used in the pipeline:
 
-* [Scikit-Image] (https://scikit-image.org/)
+* [Scikit-Image](https://scikit-image.org/)
 
-* [nd2reader] (https://rbnvrw.github.io/nd2reader/)
+* [nd2reader](https://rbnvrw.github.io/nd2reader/)
 
-* [aics-segmentation] (https://github.com/AllenInstitute/aics-segmentation)
+* [aics-segmentation](https://github.com/AllenInstitute/aics-segmentation)
 
-* [Napari] (https://github.com/napari/napari)
+* [Napari](https://github.com/napari/napari)
 
 
