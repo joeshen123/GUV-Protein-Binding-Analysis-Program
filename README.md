@@ -36,6 +36,8 @@ The bulk of this program is in **Core Programs** directory. Lists below give bri
 # Installation
 I tested the program in both Windows 7 and Mac OS Catalina system (Majority of my work is performed on Mac OS Catalina). The program uses Python 3.7.
 
+## Step by Step Installation Guidance
+
 > 1. Download the [environment.yml](environment.yml) file from the repository either through copy/paste to text editor of choice or git clone the whole repository into local computer.
 
 > 2. Install Conda/Miniconda under the [instruction](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) from the website. 
