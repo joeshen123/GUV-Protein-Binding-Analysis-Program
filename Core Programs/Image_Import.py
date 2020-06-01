@@ -39,9 +39,14 @@ def Z_Stack_Images_Extractor(address, fields_of_view, z_answer):
    Image_Sequence = ND2Reader(address)
    
    Channel_list = Image_Sequence.metadata['channels']
+   
+   # Check whether the data has one channel or two channels. If only one channel, put GUV_Channel and Protein_Channel = 0
+   if len(Channel_list) == 1:
+      GUV_Channel = 0
+      Protein_Channel = 0
 
-   # Select correct channels for downstream analysis 
-   if 'DsRed' in Channel_list[0] or '561' in Channel_list[0]:
+   # Select correct channels for downstream import
+   elif 'DsRed' in Channel_list[0] or '561' in Channel_list[0]:
       GUV_Channel = 0
       Protein_Channel = 1
 
@@ -66,7 +71,7 @@ def Z_Stack_Images_Extractor(address, fields_of_view, z_answer):
      
      pb.set_description("Converting images to numpy arrays")
 
-     if answer:
+     if z_answer:
        z_stack_images = [] 
        z_stack_Intensity_images = []
        for z_slice in range(z_stack):
@@ -106,7 +111,7 @@ for fov in range(len(FOV_list)):
    GUV_Images, Image_Intensity = Z_Stack_Images_Extractor(Image_Stack_Path,fields_of_view=fov,z_answer=answer)
    GUV_Image_list.append(GUV_Images)
    Intensity_list.append(Image_Intensity)
-   
+
 
 File_save_names = '.'.join(Image_Stack_Path.split(".")[:-1])
 

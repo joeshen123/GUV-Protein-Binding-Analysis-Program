@@ -3,84 +3,87 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - bzip2=1.0.8=h0b31af3_2
-  - ca-certificates=2020.4.5.1=hecc5488_0
-  - cairo=1.16.0=ha8983da_1004
-  - certifi=2020.4.5.1=py37hc8dfbb8_0
-  - cycler=0.10.0=py_2
-  - ffmpeg=4.2.3=hd0c0d6a_0
-  - fontconfig=2.13.1=h79c0d67_1002
-  - freetype=2.10.2=h8da9a1a_0
-  - gettext=0.19.8.1=h46ab8bc_1002
-  - giflib=5.2.1=h0b31af3_2
-  - glib=2.64.3=h577aef8_0
-  - gmp=6.2.0=h4a8c4bd_2
-  - gnutls=3.6.5=h53004b3_1002
-  - graphite2=1.3.13=h12caacf_1001
-  - h5py=2.10.0=nompi_py37h106b333_102
-  - harfbuzz=2.4.0=h1050040_4
-  - hdf5=1.10.5=nompi_h3e39495_1104
-  - icu=67.1=h4a8c4bd_0
-  - imagecodecs-lite=2019.12.3=py37h9bfed18_0
-  - jasper=1.900.1=h636a363_1006
-  - jinja2=2.11.2=pyh9f0ad1d_0
-  - jpeg=9c=h1de35cc_1001
-  - kiwisolver=1.2.0=py37ha1cc60f_0
-  - lame=3.100=h1de35cc_1001
-  - libblas=3.8.0=16_openblas
-  - libcblas=3.8.0=16_openblas
-  - libcxx=10.0.0=h1af66ff_2
-  - libffi=3.2.1=h4a8c4bd_1007
-  - libgfortran=4.0.0=2
-  - libiconv=1.15=h0b31af3_1006
-  - liblapack=3.8.0=16_openblas
-  - liblapacke=3.8.0=16_openblas
-  - libopenblas=0.3.9=h3d69b6c_0
-  - libopencv=4.2.0=py37_5
-  - libpng=1.6.37=hbbe82c9_1
-  - libtiff=4.1.0=ha78913b_3
-  - libwebp=1.0.2=hd3bf737_5
-  - libxml2=2.9.10=hc06c4ae_1
-  - llvm-openmp=10.0.0=h28b9765_0
-  - lz4-c=1.9.2=h4a8c4bd_1
-  - markupsafe=1.1.1=py37h9bfed18_1
-  - matplotlib=3.2.1=0
-  - matplotlib-base=3.2.1=py37hddda452_0
-  - ncurses=6.1=h0a44026_1002
-  - nd2reader=3.2.3=py_2
-  - nettle=3.4.1=h3efe00b_1002
-  - numpy=1.18.4=py37h7687784_0
-  - olefile=0.46=py_0
-  - opencv=4.2.0=py37_5
-  - openh264=2.1.1=hd174df1_0
-  - openssl=1.1.1g=h0b31af3_0
-  - pandas=1.0.3=py37h94625e5_1
-  - pcre=8.44=h4a8c4bd_0
-  - pillow=7.1.2=py37hfd78ece_0
-  - pims=0.4.1=py_1
-  - pip=20.1.1=py_1
-  - pixman=0.38.0=h01d97ff_1003
-  - py-opencv=4.2.0=py37h43977f1_5
-  - pyparsing=2.4.7=pyh9f0ad1d_0
-  - python=3.7.6=h90870a6_5_cpython
-  - python-dateutil=2.8.1=py_0
-  - python_abi=3.7=1_cp37m
-  - pytz=2020.1=pyh9f0ad1d_0
-  - readline=8.0=hcfe32e1_0
-  - scipy=1.4.1=py37hce1b9e5_3
-  - setuptools=46.4.0=py37hc8dfbb8_0
-  - six=1.15.0=pyh9f0ad1d_0
-  - slicerator=1.0.0=py_0
-  - sqlite=3.30.1=h93121df_0
-  - tk=8.6.10=hbbe82c9_0
-  - tornado=6.0.4=py37h9bfed18_1
-  - tqdm=4.46.0=pyh9f0ad1d_0
-  - wheel=0.34.2=py_1
-  - x264=1!152.20180806=h1de35cc_0
-  - xmltodict=0.12.0=py_0
-  - xz=5.2.5=h0b31af3_0
-  - zlib=1.2.11=h0b31af3_1006
-  - zstd=1.4.4=h4b3e974_3
+  - bzip2=1.0.8
+  - ca-certificates=2020.4.5.1
+  - cairo=1.16.0
+  - certifi=2020.4.5.1
+  - cycler=0.10.0
+  - ffmpeg=4.2.3
+  - fontconfig=2.13.1
+  - freetype=2.10.2
+  - gettext=0.19.8.1
+  - giflib=5.2.1
+  - glib=2.64.3
+  - gmp=6.2.0
+  - gnutls=3.6.5
+  - graphite2=1.3.13
+  - h5py=2.10.0
+  - harfbuzz=2.4.0
+  - hdf5=1.10.5
+  - icu=67.1
+  - imagecodecs-lite=2019.12.3
+  - jasper=1.900.1
+  - jinja2=2.11.2
+  - jpeg=9c
+  - kiwisolver=1.2.0
+  - lame=3.100
+  - libblas=3.8.0
+  - libcblas=3.8.0
+  - libcxx=10.0.0
+  - libffi=3.2.1
+  - libgfortran=4.0.0
+  - libiconv=1.15
+  - liblapack=3.8.0
+  - liblapacke=3.8.0
+  - libopenblas=0.3.9
+  - libopencv=4.2.0
+  - libpng=1.6.37
+  - libtiff=4.1.0
+  - libwebp=1.0.2
+  - libxml2=2.9.10
+  - llvm-openmp=10.0.0
+  - lz4-c=1.9.2
+  - markupsafe=1.1.1
+  - matplotlib=3.2.1
+  - matplotlib-base=3.2.1
+  - ncurses=6.1
+  - nd2reader=3.2.3
+  - nettle=3.4.1
+  - numpy=1.18.4
+  - olefile=0.46
+  - opencv=4.2.0
+  - openh264=2.1.1
+  - openssl=1.1.1g
+  - pandas=1.0.3
+  - patsy=0.5.1
+  - pcre=8.44
+  - pillow=7.1.2
+  - pims=0.4.1
+  - pip=20.1.1
+  - pixman=0.38.0
+  - py-opencv=4.2.0
+  - pyparsing=2.4.7
+  - python=3.7.6
+  - python-dateutil=2.8.1
+  - python_abi=3.7
+  - pytz=2020.1
+  - readline=8.0
+  - scipy=1.4.1
+  - seaborn=0.10.1
+  - setuptools=46.4.0
+  - six=1.15.0
+  - slicerator=1.0.0
+  - sqlite=3.30.1
+  - statsmodels=0.11.1
+  - tk=8.6.10
+  - tornado=6.0.4
+  - tqdm=4.46.0
+  - wheel=0.34.2
+  - x264=1!152.20180806
+  - xmltodict=0.12.0
+  - xz=5.2.5
+  - zlib=1.2.11
+  - zstd=1.4.4
   - pip:
     - alabaster==0.7.12
     - appnope==0.1.0
@@ -106,9 +109,9 @@ dependencies:
     - jupyter-client==6.1.3
     - jupyter-core==4.6.3
     - mplcursors==0.3
-    - napari==0.3.1
+    - napari==0.3.3
     - napari-plugin-engine==0.1.5
-    - napari-svg==0.1.2
+    - napari-svg==0.1.3
     - networkx==2.4
     - numexpr==2.7.1
     - numpydoc==1.0.0
@@ -121,14 +124,15 @@ dependencies:
     - ptyprocess==0.6.0
     - pygments==2.6.1
     - pyopengl==3.1.5
-    - pyside2==5.15.0
+    - pyside2==5.14.2.2
     - pywavelets==1.1.1
+    - pyyaml==5.3.1
     - pyzmq==19.0.1
     - qtconsole==4.7.4
     - qtpy==1.9.0
     - requests==2.23.0
     - scikit-image==0.17.2
-    - shiboken2==5.15.0
+    - shiboken2==5.14.2.2
     - snowballstemmer==2.0.0
     - sphinx==3.0.4
     - sphinxcontrib-applehelp==1.0.2

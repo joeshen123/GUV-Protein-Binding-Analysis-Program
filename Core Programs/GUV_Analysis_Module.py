@@ -98,11 +98,11 @@ def draw_GUV_contour(img,point, width,dist,factor,intensity_norm):
     region = regionprops(label(bw_shell_filled_whole))
 
     index = np.argmax([r.area for r in region])
-    #eccentricity = np.min([r.eccentricity for r in region])
+    eccentricity = np.min([r.eccentricity for r in region])
     
     radius = np.sqrt(region[index].area / math.pi)
     center = (region[index].centroid[1], region[index].centroid[0])
-    return bw_shell_output,radius, center
+    return bw_shell_output,radius, center, eccentricity
 
 
 def draw_GUV_contour_3d(img_stk, point,mid_num,width,dist,factor,intensity_norm):
@@ -319,18 +319,7 @@ def creating_mask(Image,center,width,height,factor=2):
     return mask_image
 
 
-def generate_binary_shell (center, radius, dif):
-   X,Y= center
-   arr = np.zeros((512, 512))
-   ri, ci = draw.circle(Y, X, radius=radius - dif, shape=arr.shape)
-   ro, co = draw.circle(Y, X, radius=radius + dif, shape=arr.shape)
-   arr[ro, co] = 1
-   arr[ri, ci] = 0
-
-
-   return arr
-
-def generate_df_from_list(pixel_attribute,total_time, center_list,r_list,intensity_list,z_num_list):
+def generate_df_from_list(pixel_attribute,total_time, center_list,r_list,intensity_list,z_num_list,eccen_list):
 
     time_point_list = np.linspace(0, total_time, num = len(center_list))
     center_list = np.array(center_list)
@@ -344,8 +333,9 @@ def generate_df_from_list(pixel_attribute,total_time, center_list,r_list,intensi
     
     
     z_num_list = np.array(z_num_list)
+    eccen_list = np.array(eccen_list)
     
-    stat_dict = {'Time Point': time_point_list,'center_x': center_x, 'center_y': center_y, 'radius': r_list, 'radius_micron':r_list_micron, 'Normalized GFP intensity': Normalized_intensity_list,'Median Slice Number': z_num_list}
+    stat_dict = {'Time Point': time_point_list,'center_x': center_x, 'center_y': center_y, 'radius': r_list, 'radius_micron':r_list_micron, 'Normalized GFP intensity': Normalized_intensity_list,'Median Slice Number': z_num_list, "Eccentricity":eccen_list }
     
     stat_df = pd.DataFrame(stat_dict)
 
@@ -484,7 +474,8 @@ class Image_Stacks:
         r_list = []
         GFP_list = []
         z_num_list = []
-        
+        eccen_list = []
+
         self.point = self.point_list[num]
         #print(num_len)
         pb = tqdm(range(num_len), bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.LIGHTCYAN_EX, Fore.RESET))
@@ -537,8 +528,8 @@ class Image_Stacks:
 
     
            #center,r,binary_shell_temp = fit_circle_contour(median_img, self.point,self.dist[num],self.dist[num],self.upper_limit)
-           binary_shell_temp,r,center = draw_GUV_contour(median_img,self.point,3,self.dist[num],3.0,self.upper_limit)
-
+           binary_shell_temp,r,center,eccen = draw_GUV_contour(median_img,self.point,3,self.dist[num],3.0,self.upper_limit)
+           
            if r <= 0.2 * self.dist[num] or r >= 1.4* self.dist[num]:
              #print ('r too small!')
              center = self.point
@@ -547,9 +538,11 @@ class Image_Stacks:
                 binary_shell_temp = binary_shell
 
            binary_shell = binary_shell_temp
+           
            self.point = center
            center_list.append(center)
            r_list.append(r)
+           eccen_list.append(eccen)
 
            #print(z_num)
            Intensity = obtain_ring_pixel(Median_Intensity_Slice,binary_shell)
@@ -573,7 +566,7 @@ class Image_Stacks:
               if r_list[n] >0.15*self.dist[num]:
                 break
 
-        stats_df = generate_df_from_list(self.Micron_Pixel,self.time_len, center_list,r_list,GFP_list, z_num_list)
+        stats_df = generate_df_from_list(self.Micron_Pixel,self.time_len, center_list,r_list,GFP_list, z_num_list,eccen_list)
 
         return stats_df
 
@@ -636,7 +629,7 @@ class Image_Stacks:
            # (We will deal with first input later)
            if n != 0:
              #print ('r too small!')
-             if v < 10000:
+             if v < 3000:
                 center = self.point
                 
                 err_list.append(n)
