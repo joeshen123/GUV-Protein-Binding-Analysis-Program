@@ -33,3 +33,30 @@ The bulk of this program is in **Core Programs** directory. Lists below give bri
 
 * **Vesicle_Analysis_Execution_2.0_Single.py**: A simplified 2D Version of the analysis pipelines. Input is a single z plane image stack (TYX). Because it is only single z stack, the step of finding mid-slice is skipped. Segmentation is directly applied on GUV channel.
 
+# Installation
+I tested the program in both Windows 7 and Mac OS Catalina system (Majority of my work is performed on Mac OS Catalina). The program uses Python 3.7.
+
+## Step by Step Installation Guidance
+
+> 1. Download the [environment.yml](environment.yml) file from the repository either through copy/paste to text editor of choice or git clone the whole repository into local computer.
+
+> 2. Install Conda/Miniconda under the [instruction](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) from the website. 
+
+> 3. After successfully install conda, go to the directory where **environment.yml** locate and run **conda env create -f environment.yml**. It may take several minutes to install all the dependancy for the program.
+
+> 4. Now we can activate the specific environment by running **conda activate guv_pipeline_paper**. You should see **(guv_pipline_paper)** on the left of terminal.
+
+>5. Now you can go into **Core Programs** directory and run **python Vesicle_Analysis_Execution_2.0.py** or **python Vesicle_Analysis_Execution_2.0_3d.py** or **python Vesicle_Analysis_Execution_2.0_Single.py** to start the program. Congratulations!
+
+# Requirements and Acknowledgement
+I am really grateful for the open source community of python scientific computing. Without these great tools, it is impossible for me to develop the analysis pipeline. Here are the major softwares/tools used in the pipeline:
+
+* [Scikit-Image](https://scikit-image.org/)
+
+* [nd2reader](https://rbnvrw.github.io/nd2reader/)
+
+* [aics-segmentation](https://github.com/AllenInstitute/aics-segmentation)
+
+* [Napari](https://github.com/napari/napari)
+
+
