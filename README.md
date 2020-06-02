@@ -38,15 +38,31 @@ I tested the program in both Windows 7 and Mac OS Catalina system (Majority of m
 
 ## Step by Step Installation Guidance
 
-> 1. Download the [environment.yml](environment.yml) file from the repository either through copy/paste to text editor of choice or git clone the whole repository into local computer.
+1. Download the [environment.yml](environment.yml) file from the repository either through copy/paste to text editor of choice or git clone the whole repository into local computer.
 
-> 2. Install Conda/Miniconda under the [instruction](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) from the website. 
+2. Install Conda/Miniconda under the [instruction](https://docs.conda.io/projects/conda/en/latest/user-guide/install/) from the website. 
 
-> 3. After successfully install conda, go to the directory where **environment.yml** locate and run **conda env create -f environment.yml**. It may take several minutes to install all the dependancy for the program.
+3. After successfully install conda, go to the directory where **environment.yml** locate and run: 
+  ~~~~
+conda env create -f environment.yml 
+  ~~~~
+   It may take several minutes to install all the dependancy for the program.
 
-> 4. Now we can activate the specific environment by running **conda activate guv_pipeline**. You should see **(guv_pipline)** on the left of terminal.
+4. Now we can activate the specific environment by running:
+  ~~~~
+conda activate guv_pipeline. 
+  ~~~~
+   You should see **(guv_pipline)** on the left of terminal.
 
->5. Now you can go into **Core Programs** directory and run **python Vesicle_Analysis_Execution_2.0.py** or **python Vesicle_Analysis_Execution_2.0_3d.py** or **python Vesicle_Analysis_Execution_2.0_Single.py** to start the program. Congratulations!
+5. Now you can go into **Core Programs** directory and run one of the following commands depends on which program you want to use:
+ ~~~~
+python Vesicle_Analysis_Execution_2.0.py
+   
+python Vesicle_Analysis_Execution_2.0_3d.py
+   
+python Vesicle_Analysis_Execution_2.0_Single.py
+ ~~~~
+   Congratulations!
 
 # Requirements and Acknowledgement
 I am really grateful for the open source community of python scientific computing. Without these great tools, it is impossible for me to develop the analysis pipeline. Here are the major softwares/tools used in the pipeline:
