@@ -50,7 +50,7 @@ conda env create -f environment.yml
 
 4. Now we can activate the specific environment by running:
   ~~~~
-conda activate guv_pipeline. 
+conda activate guv_pipeline 
   ~~~~
    You should see **(guv_pipline)** on the left of terminal.
 
