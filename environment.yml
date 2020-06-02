@@ -17,6 +17,7 @@ dependencies:
   - pytables
   - h5py
   - nd2reader
+  - pip
   - pip:
     - napari
 
