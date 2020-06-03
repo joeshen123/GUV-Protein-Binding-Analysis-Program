@@ -11,7 +11,6 @@ dependencies:
   - pandas
   - tqdm
   - matplotlib
-  - opencv
   - colorama
   - seaborn
   - pytables
@@ -20,6 +19,7 @@ dependencies:
   - pip
   - pip:
     - napari
+    - opencv-python-headless
+    - PyQt5
 
-prefix: /Users/zhouyangshen/opt/anaconda3/envs/guv_pipeline
 
