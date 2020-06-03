@@ -8,7 +8,6 @@ dependencies:
   - scikit-image
   - mplcursors
   - scipy
-  - opencv
   - pandas
   - tqdm
   - matplotlib
@@ -19,6 +18,7 @@ dependencies:
   - nd2reader
   - pip
   - pip:
+    - opencv-contrib-python-headless
     - napari
     - PyQt5
 
