@@ -40,16 +40,23 @@ GUV_Post_Analysis_df_list = []
 
 my_filetypes = [('all files', '.*'),('Image files', '.hdf5')]
 
-filez = filedialog.askopenfilenames(parent = root1, title='Please Select a File', filetypes = my_filetypes)
+root1.directory = filedialog.askdirectory(parent = root1)
 
-img_name= root1.tk.splitlist(filez)[0]
-#print(df_name)
+os.chdir(root1.directory)
 
-f = h5py.File(img_name, 'r')
+path = 'MIP_Original'
+try:
+    os.mkdir(path)
+except FileExistsError:
+    pass
+
+img_names = glob.glob('*.hdf5' )
 
 
-GUV_image_stk = f['561 Channel'][0]
-print(GUV_image_stk.shape)
-GUV_image_max= np.max(GUV_image_stk, axis=0)
-
-io.imsave('/Users/zhouyangshen/Desktop/test.tiff', GUV_image_max)
+for img in img_names:
+   label = path + '/' + img + '.tiff'
+   f = h5py.File(img, 'r')
+   GUV_image_stk = f['561 Channel'][0]
+   GUV_image_max= np.max(GUV_image_stk, axis=0)
+   
+   io.imsave(label, GUV_image_max)

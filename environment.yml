@@ -16,10 +16,9 @@ dependencies:
   - pytables
   - h5py
   - nd2reader
-  - pip
-  - pip:
-    - napari
-    - opencv-python-headless
-    - PyQt5
+  - opencv
+  - napari
+    
+
 
 

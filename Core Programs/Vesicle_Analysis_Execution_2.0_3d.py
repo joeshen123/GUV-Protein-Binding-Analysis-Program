@@ -12,7 +12,9 @@ from GUV_Analysis_Module import *
 import napari
 import time
 import matplotlib
-matplotlib.use('Qt4Agg')
+
+# Select proper matplotlib backend to avoid crash between matplotlib render window and tkinter window
+matplotlib.use('Qt5Agg')
 
 #Ignore warnings issued by skimage through conversion to uint8
 warnings.simplefilter("ignore",UserWarning)
