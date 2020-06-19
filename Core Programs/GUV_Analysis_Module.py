@@ -559,7 +559,7 @@ class Image_Stacks:
         #self.median_image_intensity = np.array(self.median_image_intensity)
         # Check and exchange 1st measurement (if it is way too off) to the first correct measurement.
         if r_list[0] < 0.15*self.dist[num] and len(r_list) > 2:
-           for n in range(1,num_len + 1):
+           for n in range(1,num_len):
               r_list[0:n] = [r_list[n]] * (n - 0)
               self.binary_shell_list[0:n] = [self.binary_shell_list[n]] * (n-0)
               center_list[0:n] = [center_list[n]] * (n - 0)
@@ -656,7 +656,7 @@ class Image_Stacks:
         
         # Check and exchange 1st measurement (if it is way too off) to the first correct measurement.
         if volume_list[0] <12000:
-            for n in range(1,num_len + 1):
+            for n in range(1,num_len):
                volume_list[0:n] = [volume_list[n]] * (n - 0)
                self.binary_shell_list[0:n] = [self.binary_shell_list[n]] * (n-0)
                center_list[0:n] = [center_list[n]] * (n - 0)
