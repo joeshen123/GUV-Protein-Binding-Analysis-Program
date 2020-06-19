@@ -9,6 +9,7 @@ import numpy as np
 from skimage import transform
 from scipy.ndimage import zoom
 from skimage.measure import label, regionprops
+from skimage.segmentation import clear_border
 import napari
 import time
 import matplotlib
@@ -20,6 +21,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import scipy
+from tqdm import tqdm
 matplotlib.use('Qt4Agg')
 
 # Save specific font that can be recognized by Adobe Illustrator
@@ -65,41 +67,37 @@ with napari.gui_qt():
       #df_name = df_filenames[n]
       #print(df_name)
 
-def ratio_extractor (direct):
+def eccen_extractor (direct):
 
    os.chdir(direct)
 
-   df_filenames = glob.glob('*analysis.hdf5' )
+   df_filenames = glob.glob('*_seg.npy' )
 
-   df_total_list = []
-   df_pos_list = [] 
+   eccen_list = [] 
 
-   for n in range(len(df_filenames)):
+   for n in tqdm(range(len(df_filenames))):
    
-     store = HDFStore(df_filenames[n])
-     df_total = 0
-     df_pos = 0  
+     image_data = np.load(df_filenames[n], allow_pickle=True).item()
+     masks = image_data['masks']
+     masks = clear_border(masks)
 
-     for key in store.keys():
-        df = store[key]
-        #df['radius_micron'] = df['radius'] * 0.325
-        
-        if df ['radius_micron'].tolist()[0] > 4 and df ['Eccentricity'].tolist()[0] <= 0.4 and df ['Eccentricity'].tolist()[0] != 0.0:
-          df_pos += 1
-        
-        df_total +=1 
-        
+     labelled = label(masks)
+     
+     region = regionprops(labelled)
+     
+     eccen_list_mean = []
+     for r in region:
+        eccen = 1-r.eccentricity
+        eccen_list_mean.append(eccen)
+     
+     mean = np.mean(np.array(eccen_list_mean))
+
+     eccen_list.append(mean)
+
    
-     df_total_list.append(df_total)
-     df_pos_list.append(df_pos)
+   return np.array(eccen_list)
 
-     store.close()
-
-   ratio_list = np.array(df_pos_list) / np.array(df_total_list)
-   
-   return ratio_list
-
-ratio_list_1 = ratio_extractor(root1.directory)
+eccen_list_1 = eccen_extractor(root1.directory)
 
 
 root2 = tk.Tk()
@@ -113,17 +111,17 @@ my_filetypes = [('all files', '.*'),('Image files', '.hdf5')]
 root2.update() # To prevent open file dialog freeze after selecting the file
 root2.directory = filedialog.askdirectory(parent = root2)
 
-ratio_list_2 = ratio_extractor(root2.directory)
+eccen_list_2 = eccen_extractor(root2.directory)
 
-print(scipy.stats.ttest_ind(ratio_list_1, ratio_list_2)) 
+print(scipy.stats.ttest_ind(eccen_list_1, eccen_list_2)) 
 
-condition_1 = len(ratio_list_1) * ['Original Approach']
-condition_2 = len(ratio_list_2) * ['Modified Approach']
+condition_1 = len(eccen_list_1) * ['Original Approach']
+condition_2 = len(eccen_list_2) * ['Modified Approach']
 
-ratio_df1 = pd.DataFrame({'ratio':ratio_list_1,'condition':condition_1})
-ratio_df2 = pd.DataFrame({'ratio':ratio_list_2,'condition':condition_2})
+eccen_df1 = pd.DataFrame({'Circularity':eccen_list_1,'condition':condition_1})
+eccen_df2 = pd.DataFrame({'Circularity':eccen_list_2,'condition':condition_2})
 
-ratio_df = pd.concat([ratio_df1,ratio_df2])
+ratio_df = pd.concat([eccen_df1,eccen_df2])
 
 # Drawthe point plot with individual data points
 
@@ -134,17 +132,17 @@ sns.set(style="ticks")
 sns.set_context("paper", font_scale=2, rc={"font.size":16,"axes.labelsize":16})
 
 
-ax = sns.pointplot(x="condition", y="ratio", data=ratio_df, ci=95, color='k',capsize = 0.1, errwidth=4)
-ax = sns.swarmplot(x="condition", y="ratio",data=ratio_df, hue = 'condition',size = 8,palette=['b','r'])
+ax = sns.pointplot(x="condition", y="Circularity", data=ratio_df, ci=95, color='k',capsize = 0.1, errwidth=4)
+ax = sns.swarmplot(x="condition", y="Circularity",data=ratio_df, hue = 'condition',size = 8,palette=['b','r'])
 
-ax.set_ylim([0,0.74])
+ax.set_ylim([0.45,0.8])
 #labels = ['Hypotonic \n(n = %d)' % len(Hypo),'Isotonic \n(n = %d)' % len(Iso)]
 
 #fig.set(xticklabels = labels)
 
 ax.tick_params(labelsize= 16)
 plt.xlabel('')
-plt.ylabel('Percent of Unilamellar Vesicles', fontsize=14, fontweight = 'bold')
+plt.ylabel('Circularity', fontsize=14, fontweight = 'bold')
 plt.rcParams['axes.labelweight'] = 'bold'
 #plt.show()
 
