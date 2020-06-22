@@ -113,7 +113,7 @@ root2.directory = filedialog.askdirectory(parent = root2)
 
 eccen_list_2 = eccen_extractor(root2.directory)
 
-print(scipy.stats.ttest_ind(eccen_list_1, eccen_list_2)) 
+print(scipy.stats.ttest_ind(eccen_list_1, eccen_list_2, equal_var=False)) 
 
 condition_1 = len(eccen_list_1) * ['Original Approach']
 condition_2 = len(eccen_list_2) * ['Modified Approach']

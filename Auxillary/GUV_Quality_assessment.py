@@ -15,6 +15,7 @@ import matplotlib
 from pandas import HDFStore
 import os
 import glob
+from tqdm import tqdm
 import numpy as np
 import seaborn as sns
 import pandas as pd
@@ -74,7 +75,7 @@ def ratio_extractor (direct):
    df_total_list = []
    df_pos_list = [] 
 
-   for n in range(len(df_filenames)):
+   for n in tqdm(range(len(df_filenames))):
    
      store = HDFStore(df_filenames[n])
      df_total = 0
@@ -115,7 +116,7 @@ root2.directory = filedialog.askdirectory(parent = root2)
 
 ratio_list_2 = ratio_extractor(root2.directory)
 
-print(scipy.stats.ttest_ind(ratio_list_1, ratio_list_2)) 
+print(scipy.stats.ttest_ind(ratio_list_1, ratio_list_2, equal_var=False)) 
 
 condition_1 = len(ratio_list_1) * ['Original Approach']
 condition_2 = len(ratio_list_2) * ['Modified Approach']
