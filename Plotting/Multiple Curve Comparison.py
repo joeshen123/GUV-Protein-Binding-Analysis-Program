@@ -17,35 +17,6 @@ import scipy
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
-# Specific class can save tiff after adjusting figure window and dpi.
-class AnySizeSaver():
-    def __init__(self, fig=None, figsize=None, dpi=None, filename=None):
-        if not fig: fig=plt.gcf()
-        self.fig = fig
-        if not figsize: figsize=self.fig.get_size_inches()
-        self.figsize=figsize
-        if not dpi: dpi=self.fig.dpi
-        self.dpi=dpi
-        if not filename: filename="myplot.png"
-        self.filename=filename
-        self.cid = self.fig.canvas.mpl_connect("key_press_event", self.key_press)
-
-    def key_press(self, event):
-        if event.key == "t":
-            self.save()
-
-    def save(self):
-        oldfigsize = self.fig.get_size_inches()
-        olddpi=self.fig.dpi
-        self.fig.set_size_inches(self.figsize)
-        self.fig.set_dpi(self.dpi)
-        self.fig.savefig(self.filename, dpi=self.dpi)
-        self.fig.set_size_inches(oldfigsize, forward=True)
-        self.fig.set_dpi(olddpi)
-        self.fig.canvas.draw_idle()
-        print(fig.get_size_inches())
-
-
 
 #Ignore Warnings
 warnings.simplefilter("ignore",UserWarning)
@@ -53,7 +24,32 @@ warnings.simplefilter("ignore",RuntimeWarning)
 
 
 
+# Make a function to combine all df together into one df. Input is the directory of all dfs
+def curve_df_combine1(directory):
+   os.chdir(directory)
 
+   df_list = []
+
+   df_filenames = glob.glob('*analysis.hdf5' )
+
+   
+   for n in range(len(df_filenames)):
+      df_name = df_filenames[n]
+      print(df_name)
+      store = HDFStore(df_name)
+
+      for key in store.keys():
+         df = store[key]
+         df_list.append(df)
+
+      store.close()
+
+
+   df_len = len(df_list)
+
+   df_final = pd.concat(df_list)
+
+   return df_final, df_len
 
 # Make a function to combine all df together into one df. Input is the directory of all dfs
 def curve_df_combine(directory):
@@ -72,9 +68,9 @@ def curve_df_combine(directory):
       for key in store.keys():
          df = store[key]
          #print(len(df))
-         #df = df[0:60]
-         print(len(df))
-         #df['Time Point'] = np.linspace(0, 60, num = 60)
+         df = df[0:60]
+         df['Time Point'] = np.linspace(0, 60, num = 60)
+         #df['Normalized GFP intensity'] = df['Normalized GFP intensity'] 
          df_list.append(df)
 
       store.close()
@@ -89,6 +85,11 @@ def curve_df_combine(directory):
 root = tk.Tk()
 root.withdraw()
 
+root.directory = filedialog.askdirectory(initialdir=os.path.dirname(os.getcwd()))
+Name0 = root.directory
+df_final_zero,_ = curve_df_combine1(Name0)
+normalization_factor = df_final_zero['Normalized GFP intensity'].median()
+
 
 root.directory = filedialog.askdirectory(parent = root,initialdir=os.path.dirname(os.getcwd()))
 
@@ -97,13 +98,16 @@ label_1 = Name1.split("/")[-1]
 
 
 df_final_one,df_final_one_len = curve_df_combine(Name1)
-
+df_final_one['Normalized GFP intensity'] = df_final_one['Normalized GFP intensity']/normalization_factor
 print(df_final_one)
 
 root.directory = filedialog.askdirectory(parent = root,initialdir=os.path.dirname(os.getcwd()))
 Name2 = root.directory
 label_2 = Name2.split("/")[-1]
 df_final_two,df_final_two_len = curve_df_combine(Name2)
+df_final_two['Normalized GFP intensity'] = df_final_two['Normalized GFP intensity']/normalization_factor
+print(df_final_two)
+
 
 #by_row_index = df_final_two.groupby(df_final_two.index)
 #df_means_swell = by_row_index.mean()
@@ -114,7 +118,7 @@ Name3 = root.directory
 label_3 = Name3.split("/")[-1]
 df_final_three,df_final_three_len = curve_df_combine(Name3)
 
-
+df_final_three['Normalized GFP intensity'] = df_final_three['Normalized GFP intensity']/normalization_factor
 #by_row_index = df_final_three.groupby(df_final_three.index)
 #df_means_calcium = by_row_index.mean()
 
@@ -122,12 +126,14 @@ root.directory = filedialog.askdirectory(initialdir=os.path.dirname(os.getcwd())
 Name4 = root.directory
 label_4 = Name4.split("/")[-1]
 df_final_four,df_final_four_len = curve_df_combine(Name4)
-
-
+df_final_four['Normalized GFP intensity'] = df_final_four['Normalized GFP intensity']/normalization_factor
+'''
+'''
 root.directory = filedialog.askdirectory(initialdir=os.path.dirname(os.getcwd()))
 Name5 = root.directory
 label_5 = Name5.split("/")[-1]
 df_final_five,df_final_five_len = curve_df_combine(Name5)
+df_final_five['Normalized GFP intensity'] = df_final_five['Normalized GFP intensity']/normalization_factor
 '''
 '''
 root.directory = filedialog.askdirectory()
@@ -170,26 +176,18 @@ ax = sns.lineplot(x='Time Point', y='Normalized GFP intensity', data = df_final_
 ax.tick_params(axis = 'y', labelsize = 'x-large')
 ax.tick_params(axis = 'x',  labelsize = 'x-large')
 ax.set_xlabel('Time Points (min)', fontweight = 'bold', fontsize = 20)
-ax.set_ylabel('cPla2 C2 Binding Intensities', fontweight = 'bold', fontsize = 20)
-#ax.set_ylim([0,2000])
+ax.set_ylabel('Normalized Alox12 PLAT Binding Intensities', fontweight = 'bold', fontsize = 20)
+ax.set_ylim([0,24])
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 plt.tight_layout()
-#plt.show()
+plt.show()
 #plt.savefig('C2_versus_mutant_rupture.tif', dpi=400)
-
-#box = ax.get_position()
-#ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-#plt.tight_layout()
-#plt.legend(bbox_to_anchor=(0, 1), loc=2, borderaxespad=0.)
-#ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-#ax.get_legend().remove()
-#plt.tight_layout()
 
 
 #fig_save_name = filedialog.asksaveasfilename(parent=root,title="Please select a name for saving figure:",filetypes=[('Graph', '.pdf')])
 #ass = AnySizeSaver(fig=fig, dpi=600, filename=fig_save_name)
-plt.show()
+#plt.show()
 
 #plt.savefig(fig_save_name, transparent=True)
 

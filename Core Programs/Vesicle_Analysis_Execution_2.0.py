@@ -40,7 +40,7 @@ image = f['561 Channel'][:]
 
 print(image.shape)
 
-intensity_image = f['488 Channel'][:]
+intensity_image = f['561 Channel'][:]
 
 #image = image + intensity_image
 

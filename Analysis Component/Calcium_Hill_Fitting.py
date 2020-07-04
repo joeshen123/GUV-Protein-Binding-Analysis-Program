@@ -60,7 +60,7 @@ print(dirs)
 df_fin = []
 mean_conc_list = []
 for direct in dirs:
-   concentration = float(direct.split('/')[-2])
+   concentration = float(direct.split('\\')[1])
 
    df_final,_ = curve_df_combine(direct,concentration)
 
@@ -92,9 +92,9 @@ concentration_list = np.array(list(concentration_list))
 
 #print(isotherm_df)
 background = mean_list[0].copy()
-mean_list = mean_list - background
-a = df_fin['Normalized GFP intensity']
-df_fin['Normalized GFP intensity'] = df_fin['Normalized GFP intensity'] -background
+mean_list = mean_list / background
+
+df_fin['Normalized GFP intensity'] = df_fin['Normalized GFP intensity'] /background
 
 #print (df_fin['Normalized GFP intensity']==a)
 print(mean_list)
@@ -112,7 +112,7 @@ def func(x,max_int,ca_half,h):
 popt, pcov = curve_fit(func,concentration_list,mean_list,p0=(max_intensity,20,1))
 
 ###############################################################################################
-
+'''
 root = tk.Tk()
 root.withdraw()
 d1 = filedialog.askdirectory(initialdir=os.getcwd())
@@ -122,7 +122,7 @@ print(dirs)
 df_fin1 = []
 mean_conc_list1 = []
 for direct in dirs:
-   concentration = float(direct.split('/')[-2])
+   concentration = float(direct.split('\\')[1])
 
    df_final,_ = curve_df_combine(direct,concentration)
 
@@ -151,9 +151,9 @@ concentration_list1 = np.array(list(concentration_list1))
 
 #print(isotherm_df)
 background1 = mean_list1[0].copy()
-mean_list1 = mean_list1 - background1
+mean_list1 = mean_list1 / background1
 
-df_fin1['Normalized GFP intensity'] = df_fin1['Normalized GFP intensity']-background1
+df_fin1['Normalized GFP intensity'] = df_fin1['Normalized GFP intensity']/background1
 
 #print (df_fin['Normalized GFP intensity']==a)
 print(mean_list1)
@@ -173,7 +173,7 @@ df_fin['condition'] = d.split('/')[-1]
 df_fin1['condition'] = d1.split('/')[-1]
 df_fin_total_list = [df_fin, df_fin1]
 df_fin_total = pd.concat(df_fin_total_list)
-
+'''
 '''
 #################################################################################################
 root = tk.Tk()
@@ -236,7 +236,7 @@ popt2, pcov2 = curve_fit(func,concentration_list2,mean_list2,p0=(max_intensity2,
 print(popt)
 #print(popt1)
 #print(popt2)
-
+'''
 sns.set(style="ticks")
 sns.set_context("paper", font_scale=1.5, rc={"font.size":20,"axes.labelsize":16, 'figure.figsize':(40,38),'lines.markersize': 14, "lines.linewidth": 4 })
 
@@ -257,12 +257,12 @@ ax.plot(np.linspace(0,10000,400000), func(np.linspace(0,10000,400000), *popt),'r
 ax.plot(np.linspace(0,10000,400000), func(np.linspace(0,10000,400000), *popt1),'b-')
 #ax.plot(np.linspace(0,10000,400000), func(np.linspace(0,10000,400000), *popt2),'-')
 ax.set_xlabel('Calcium Concentrations (um)', fontweight = 'bold', fontsize = 20)
-ax.set_ylabel('cPla2 C2 Binding Intensities', fontweight = 'bold', fontsize = 20)
+ax.set_ylabel('Normalized cPla2 C2 Binding Intensities', fontweight = 'bold', fontsize = 20)
 ax.legend(fontsize='large')
 #ax.set_ylim(0,1600)
 #ax.yaxis.set_ticks([0,130,260,390,520,650,780])
 #ax.xaxis.set_ticklabels(concentration_list)
-ax.set_ylim([-60,2700])
+ax.set_ylim([-4,64])
 #ax.set_xlim([-60,2100])
 #seaborn.despine(ax=ax, offset=0)
 plt.yticks(fontsize=30)
@@ -273,3 +273,4 @@ plt.tight_layout()
 # Save plot as pdf for publication
 fig_save_name = filedialog.asksaveasfilename(parent=root,title="Please select a name for saving figure:",filetypes=[('Graph', '.pdf')])
 plt.savefig(fig_save_name, transparent=True)
+'''

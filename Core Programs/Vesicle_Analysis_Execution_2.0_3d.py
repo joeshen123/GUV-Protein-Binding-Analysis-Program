@@ -35,7 +35,7 @@ file_name= root.tk.splitlist(filez)[0]
 
 f = h5py.File(file_name, 'r')
 
-image = f['561 Channel'][:]
+image = f['488 Channel'][:]
 
 intensity_image = f['488 Channel'][:]
 
@@ -45,6 +45,8 @@ time_len = simpledialog.askinteger("Input", "How long is the movie in minutes? "
                                                  parent=root,
                                                  minvalue=0, maxvalue=1000)
 
+
+surface_answer = messagebox.askyesnocancel("Question","Do you want to visualize rendering?")                                                
 # function to extract center point and line of scanning radius for image processing
 def pt_dist_extractor(line_data_list):
     point_list = []
@@ -71,11 +73,15 @@ def pt_dist_extractor(line_data_list):
 
     return (point_list, line_list,z_list)
 
+original_spacing = np.array([1.4,0.13,0.13])
+spacing = original_spacing / original_spacing[1]
+spacing = np.insert(spacing,0,1)
+
 with napari.gui_qt():
     viewer = napari.Viewer()
-    viewer.add_image(image, name='561', colormap='red',blending = 'opaque', scale = (1,4,1,1))
-    viewer.add_image(intensity_image,name='488',colormap='green',blending = 'additive', scale = (1,4,1,1))
-    line_layer = viewer.add_shapes(shape_type='line', edge_width=1.5, face_color = 'blue', edge_color = 'b', scale = (1,4,1,1))
+    viewer.add_image(image, name='561', colormap='red',blending = 'opaque', scale = spacing)
+    viewer.add_image(intensity_image,name='488',colormap='green',blending = 'additive', scale = spacing)
+    line_layer = viewer.add_shapes(shape_type='line', edge_width=1.5, face_color = 'blue', edge_color = 'b', scale = spacing)
 
     # Stop the program for updating shape layer
     input("Press Enter to continue...")
@@ -84,15 +90,57 @@ with napari.gui_qt():
     point_list, line_list,z_list= pt_dist_extractor(line_data)
     Analysis_Stack = Image_Stacks(image,intensity_image,point_list,line_list,z_list,24000,time_len)
     Analysis_Stack.tracking_multiple_circles_3d()
-    viewer.add_image(Analysis_Stack.binary_shell_list,name='3D_Volume', blending = 'additive', scale = (1,4,1,1))
+    
+     
+    if surface_answer == True:
+      '''
+      n = 0
+      for surf in Analysis_Stack.surface_list:
+        verts = surf[0]
+        time_d = np.ones([verts.shape[0],1]) * n
+        verts = np.append(verts,time_d,axis=1)
+        verts[:,[0,1,2,3]] = verts[:,[3,2,1,0]]
+
+        face = surf[1]
+
+        if n == 0:
+           verts_list = verts
+           face_list = face
+
+        else:
+           verts_list= np.concatenate([verts_list,verts])
+           face_list= np.concatenate([face_list,face])
+           
+        
+        n += 1
+    
+
+    
+      print(verts_list.shape)
+      print(face_list.shape)
 
 
+      viewer = napari.Viewer(ndisplay=3)
+      viewer.add_image(image, name='561', colormap='red',blending = 'opaque', scale = spacing)
+      viewer.add_image(intensity_image,name='488',colormap='green',blending = 'additive', scale = spacing)
+      viewer.add_image(Analysis_Stack.binary_shell_list,name='3D_Volume', blending = 'additive', scale = spacing)
+      time_list = np.linspace(0,1,len(verts_list))
+      print(time_list.shape)
+      surface = (verts_list,face_list,time_list)
+      '''
+      for surf in Analysis_Stack.surface_list:
+         print(surf)
+         viewer.add_surface(surf,  colormap='turbo', opacity=0.9,
+                            contrast_limits=[-1.5, 3.5], name='Surface_Rendering_Timelapse') 
+    
+    else:
+      viewer.add_image(Analysis_Stack.binary_shell_list,name='3D_Volume', blending = 'additive', scale = spacing)
 
 GUV_Post_Analysis_df_list = []
 GUV_Post_Analysis_df_list += Analysis_Stack.stats_df_list
 #Pandas_list_plotting(GUV_Post_Analysis_df_list, 'Normalized Intensity',marker='o')
 Pandas_list_plotting(GUV_Post_Analysis_df_list,'Volume',marker='o')
-
+Pandas_list_plotting(GUV_Post_Analysis_df_list,'Surface_area',marker='o')
 
 del_answer = messagebox.askyesnocancel("Question","Do you want to delete some measurements?")
 
@@ -105,6 +153,8 @@ while del_answer == True:
         GUV_Post_Analysis_df_list.pop(delete_answer)
         #Pandas_list_plotting(GUV_Post_Analysis_df_list, 'Normalized Intensity',marker='o')
         Pandas_list_plotting(GUV_Post_Analysis_df_list,'Volume',marker='o')
+        Pandas_list_plotting(GUV_Post_Analysis_df_list,'Surface_area',marker='o')
+
         del_answer = messagebox.askyesnocancel("Question","Do you want to delete more measurements?")
 
 
@@ -128,6 +178,11 @@ for df in GUV_Post_Analysis_df_list:
 #Save the segmentation Binary Result for downstream analysis
 seg_save_name='{File_Name}_segmentation_result_3D.hdf5'.format(File_Name = File_save_names)
 
-with h5py.File(seg_save_name, "w") as f:
+if surface_answer == True:
+  with h5py.File(seg_save_name, "w") as f:
       f.create_dataset('Segmentation_Binary_Result', data = Analysis_Stack.binary_shell_list, compression = 'gzip')
-      
+      f.create_dataset('Surface_Area_Rendering', data = surface, compression = 'gzip')
+
+else:
+  with h5py.File(seg_save_name, "w") as f:
+      f.create_dataset('Segmentation_Binary_Result', data = Analysis_Stack.binary_shell_list, compression = 'gzip')

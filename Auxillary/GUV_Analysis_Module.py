@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import pylab
 from scipy import ndimage
-from skimage.measure import label, regionprops, marching_cubes_lewiner, mesh_surface_area
+from skimage.measure import label, regionprops
 from matplotlib.patches import Circle
 import cv2
 import math
@@ -147,28 +147,14 @@ def draw_GUV_contour_3d(img_stk, point,mid_num,width,dist,factor,intensity_norm)
     '''
     bw_shell_output[:,int(round(Y)):int(round(Y+factor*dist)),int(round(X)):int(round(X + factor * dist))] = bw_shell
     
-    label_image = label(bw_shell_filled_whole)
-    region = regionprops(label_image)
+  
+    region = regionprops(label(bw_shell_filled_whole))
 
     index = np.argmax([r.area for r in region])
     
     volume = region[index].area
-    
-    # calculate surface area
-    GUV_3d = (label_image == index)
-    GUV_3d_1 = GUV_3d.transpose(2, 1, 0)
-
-    original_spacing = np.array([0.13,0.13,1.4])
-    spacing = original_spacing / original_spacing[0]
-
-    verts, faces, _, values = marching_cubes_lewiner(GUV_3d_1, level=0, spacing=tuple(spacing))
-
-
-    surface = (verts,faces,values)
-    surface_area = mesh_surface_area(verts, faces)
-
     center = (region[index].centroid[2], region[index].centroid[1])
-    return bw_shell_output,surface,volume,surface_area, center
+    return bw_shell_output,volume, center
 
 
 
@@ -274,7 +260,7 @@ def Pandas_list_plotting(pandas_list, keyword, marker = None):
          ax = plt.plot(Time_point, radius_data, color = color[n], label = str(n), marker = marker)
     
     if keyword == 'Volume':
-      ax.set_title('Vesicles Volume Changes (um^3)',fontsize=18)
+      ax.set_title('Vesicles Volume Changes (um)',fontsize=18)
 
       ax.set_xlabel('Time Points (min)', fontsize = 16, fontweight = 'bold')
       ax.set_ylabel('Vesicles Volumes (um^3) ', fontsize = 16,fontweight = 'bold')
@@ -284,18 +270,6 @@ def Pandas_list_plotting(pandas_list, keyword, marker = None):
          v_data = df['volume_micron_cube'].tolist()
          Time_point = df['Time Point'].tolist()
          ax = plt.plot(Time_point, v_data, color = color[n], label = str(n), marker = marker)
-    
-    if keyword == 'Surface_area':
-      ax.set_title('Vesicles Area Changes (um^2)',fontsize=18)
-
-      ax.set_xlabel('Time Points (min)', fontsize = 16, fontweight = 'bold')
-      ax.set_ylabel('Surface Area (um^2) ', fontsize = 16,fontweight = 'bold')
-
-      for n in range(list_len):
-         df = pandas_list[n]
-         area_data = df['surface_area_micron_square'].tolist()
-         Time_point = df['Time Point'].tolist()
-         ax = plt.plot(Time_point, area_data, color = color[n], label = str(n), marker = marker)
 
     #plt.legend(loc='right')
     plt.tight_layout()
@@ -367,7 +341,7 @@ def generate_df_from_list(pixel_attribute,total_time, center_list,r_list,intensi
 
     return stat_df
 
-def generate_df_from_list_3D(total_time, center_list,v_list,surface_area_list,z_num_list,convert_ratio_vol,convert_ratio_area):
+def generate_df_from_list_3D(total_time, center_list,v_list,z_num_list,convert_ratio):
 
     time_point_list = np.linspace(0, total_time, num = len(center_list))
     center_list = np.array(center_list)
@@ -376,12 +350,9 @@ def generate_df_from_list_3D(total_time, center_list,v_list,surface_area_list,z_
     z_num_list = np.array(z_num_list)
     
     v_list = np.array(v_list)
-    v_list_micron_cube = v_list * convert_ratio_vol
-    
-    surface_area_list = np.array(surface_area_list)
-    surface_area_micron_square = surface_area_list* convert_ratio_area
+    v_list_micron_cube = v_list * convert_ratio
 
-    stat_dict = {'Time Point': time_point_list,'center_x': center_x, 'center_y': center_y,'center_z': z_num_list, 'volume': v_list, 'volume_micron_cube': v_list_micron_cube, 'surface_area': surface_area_list,"surface_area_micron_square":surface_area_micron_square }
+    stat_dict = {'Time Point': time_point_list,'center_x': center_x, 'center_y': center_y,'center_z': z_num_list, 'volume': v_list, 'volume_micron_cube': v_list_micron_cube}
     
     stat_df = pd.DataFrame(stat_dict)
 
@@ -481,7 +452,6 @@ class Image_Stacks:
          self.Intensity_stack = GFP_image_z.copy()
          self.Micron_Pixel = 0.33
          self.Volume_Micron_Cube = 0.13 * 0.13 * 1.4
-         self.area_Micron = 0.13 * 0.13
          self.intensity_enhance = False
          self._enhance = None
          self._blur = None
@@ -493,7 +463,6 @@ class Image_Stacks:
          self.stats_df_list = []
          self.dist = dist_list
          self.binary_shell_list = np.zeros(self.Image_stack.shape)
-         self.surface_list = []
          self.upper_limit = upper_limit
          self.z_list = z_list
          self.time_len = total_time
@@ -621,7 +590,6 @@ class Image_Stacks:
         num_len = self.Image_stack.shape[0]
         center_list = []
         volume_list = []
-        surface_area_list = []
         z_num_list = []
         err_list = []
         self.point = self.point_list[num]
@@ -655,7 +623,7 @@ class Image_Stacks:
               
            #plt.imshow(Image_stack_n[10,:,:])
            #plt.show()
-           binary_shell_temp,surface_temp,v,surface_area,center = draw_GUV_contour_3d(Image_stack_n,self.point,z_num, 1,self.dist[num],3.0,self.upper_limit)
+           binary_shell_temp,v,center = draw_GUV_contour_3d(Image_stack_n,self.point,z_num, 1,self.dist[num],3.0,self.upper_limit)
            
            # After 1st input, check any outlier values due to mistake in segmentation. If there is, replace with previous measurements.
            # (We will deal with first input later)
@@ -666,19 +634,15 @@ class Image_Stacks:
                 
                 err_list.append(n)
                 v = volume_list[-1]
-                surface_area = surface_area_list[-1]
                 binary_shell_temp = binary_shell
-                surface_temp = surface
            
            binary_shell = binary_shell_temp
-           surface = surface_temp
            self.point = center
            center_list.append(center)
            volume_list.append(v)
-           surface_area_list.append(surface_area)
+           
 
-           self.binary_shell_list[n,:,:,:] += binary_shell
-           self.surface_list.append(surface)
+           self.binary_shell_list[n,:,:,:] = binary_shell
            #self.middle_slice_stack[n,:,:] = median_img
            #self.middle_slice_stack_intensity[n,:,:] = Median_Intensity_Slice
 
@@ -687,22 +651,14 @@ class Image_Stacks:
         
         # Replace the outlier measurement with a random number between previous and post measurement. It is more accurate than previous measurement.
         for num in err_list:
-           if num == num_len -1 :
-             volume_list[num] = volume_list[num-1]
-             surface_area_list[num] = surface_area_list[num-1]
-           
-           else: 
-             volume_list[num] = random.uniform(volume_list[num-1],volume_list[num+1])
-             surface_area_list[num] = random.uniform(surface_area_list[num-1],surface_area_list[num+1])
+           volume_list[num] = random.uniform(volume_list[num-1],volume_list[num+1])
 
         
         # Check and exchange 1st measurement (if it is way too off) to the first correct measurement.
         if volume_list[0] <12000:
             for n in range(1,num_len):
                volume_list[0:n] = [volume_list[n]] * (n - 0)
-               surface_area_list[0:n] = [surface_area_list[n]] * (n - 0)
                self.binary_shell_list[0:n] = [self.binary_shell_list[n]] * (n-0)
-               #self.surface_list[0:n] = [self.surface_list[n]] * (n-0)
                center_list[0:n] = [center_list[n]] * (n - 0)
                if volume_list[n] >12000:
                  break
@@ -710,7 +666,7 @@ class Image_Stacks:
                 
             
             
-        stats_df = generate_df_from_list_3D(self.time_len, center_list,volume_list,surface_area_list, z_num_list, self.Volume_Micron_Cube,self.area_Micron)
+        stats_df = generate_df_from_list_3D(self.time_len, center_list,volume_list, z_num_list, self.Volume_Micron_Cube)
 
         return stats_df
 

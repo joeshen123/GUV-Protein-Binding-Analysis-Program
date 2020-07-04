@@ -22,7 +22,36 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
 # Make a function to combine all df together into one df. Input is the directory of all dfs
-def curve_df_combine(directory,name):
+def norm_factor(directory):
+   os.chdir(directory)
+
+   df_list = []
+
+   df_filenames = glob.glob('*analysis.hdf5' )
+
+   
+   for n in range(len(df_filenames)):
+      df_name = df_filenames[n]
+      print(df_name)
+      store = HDFStore(df_name)
+
+      for key in store.keys():
+         df = store[key]
+         #print(len(df))
+         #df = df[0:60]
+         #df['Time Point'] = np.linspace(0, 60, num = 60)
+         df_list.append(df)
+
+      store.close()
+
+
+   df_len = len(df_list)
+
+   df_final = pd.concat(df_list)
+
+   return df_final, df_len
+# Make a function to combine all df together into one df. Input is the directory of all dfs
+def curve_df_combine(directory,name,norm_factor ):
    os.chdir(directory)
 
    df_list = []
@@ -36,7 +65,7 @@ def curve_df_combine(directory,name):
       
       for key in store.keys():
          df = store[key]
-         #df['GFP intensity'] = df['GFP intensity']
+         df['Normalized GFP intensity'] = df['Normalized GFP intensity']/ norm_factor
          end_df = df.tail(1)
          df_list.append(end_df)
 
@@ -50,6 +79,14 @@ def curve_df_combine(directory,name):
 
    return df_final, df_len
 
+# Import and calculate the median intensity of background image (cPla2 C2 1um in VB263). Use this median intensity as normalization factor
+root = tk.Tk()
+root.withdraw()
+d0 = filedialog.askdirectory(initialdir=os.path.dirname(os.getcwd()))
+
+df_final_zero,_ = norm_factor(d0)
+normalization_factor = df_final_zero['Normalized GFP intensity'].median()
+
 ##########################################################################
 root = tk.Tk()
 root.withdraw()
@@ -59,10 +96,10 @@ concentration_list = []
 df_fin = []
 mean_list = []
 for direct in dirs:
-   concentration = float(direct.split('/')[-2])
+   concentration = float(direct.split("\\")[1])
    concentration_list.append(concentration)
 
-   df_final,_ = curve_df_combine(direct,concentration)
+   df_final,_ = curve_df_combine(direct,concentration,normalization_factor)
 
    #df_final['Normalized GFP intensity'] = df_final['Normalized GFP intensity']/1000
    df_fin.append(df_final)
@@ -89,13 +126,14 @@ concentration_list1 = []
 df_fin1 = []
 mean_list1 = []
 
+
 for direct in dirs1:
    
-   concentration = float(direct.split('/')[-2])
+   concentration = float(direct.split("\\")[1])
    concentration_list1.append(concentration)
    
    
-   df_final,_ = curve_df_combine(direct,concentration)
+   df_final,_ = curve_df_combine(direct,concentration,normalization_factor)
    
    #df_final['Normalized GFP intensity'] = df_final['Normalized GFP intensity']/1000
    df_fin1.append(df_final)
@@ -122,10 +160,10 @@ df_fin2 = []
 mean_list2 = []
 for direct in dirs2:
    print (concentration)
-   concentration = float(direct.split('/')[-2])
+   concentration = float(direct.split('\\')[1])
    concentration_list2.append(concentration)
 
-   df_final,_ = curve_df_combine(direct,concentration)
+   df_final,_ = curve_df_combine(direct,concentration,normalization_factor)
 
    df_fin2.append(df_final)
 
@@ -136,16 +174,14 @@ for direct in dirs2:
 df_fin2= pd.concat(df_fin2)
 print(concentration_list2)
 print(mean_list2)
-'''
 
+'''
 # Put two data frame together into 1 giant data frame
 df_fin['condition'] = d.split('/')[-1]
 df_fin1['condition'] = d1.split('/')[-1]
 #df_fin2['condition'] = d2.split('/')[-1]
 df_fin_total_list = [df_fin, df_fin1]
 df_fin_total = pd.concat(df_fin_total_list)
-
-
 
 #######################################################################################
 #isotherm_df = pd.DataFrame.from_dict({'Conc':concentration_list, 'Intensity': mean_list})
@@ -176,14 +212,16 @@ sns.set_context("paper", font_scale=1.5, rc={"font.size":16,"axes.labelsize":12,
 fig, ax = plt.subplots()
 fig.set_size_inches(12, 8)
 
-ax.plot(np.linspace(0,2000,40000), func(np.linspace(0,2000,40000), *popt),'r-')
 
-ax = sns.lineplot(x='conc', y='Normalized GFP intensity', style='condition', markers=["o",'^'],palette=['r','b'],hue ='condition', data=df_fin_total,err_style='bars',err_kws={'capsize':12, 'elinewidth':3,'capthick':4})
+
+ax = sns.lineplot(x='conc', y='Normalized GFP intensity', style='condition', markers=["o",'^'],palette=['k','r'],hue ='condition', data=df_fin_total,err_style='bars',err_kws={'capsize':12, 'elinewidth':3,'capthick':4})
 for l in ax.lines:
    l.set_linestyle("None")
 
-ax.plot(np.linspace(0,2000,40000), func(np.linspace(0,2000,40000), *popt),'r-')
-ax.plot(np.linspace(0,2000,40000), func(np.linspace(0,2000,40000), *popt1),'b-')
+
+ax.plot(np.linspace(0,2000,40000), func(np.linspace(0,2000,40000), *popt),'k-')
+ax.plot(np.linspace(0,2000,40000), func(np.linspace(0,2000,40000), *popt1),'r-')
+#ax.plot(np.linspace(0,2000,40000), func(np.linspace(0,2000,40000), *popt2),'r-')
 #ax = sns.lineplot(x='conc', y='Normalized GFP intensity',marker='o',label= d1.split('/')[-1],palette=['blue'], data=df_fin1,err_style='bars',err_kws={'capsize':6, 'elinewidth':4,'capthick':4})
 #ax.lines[6].set_linestyle("None")
 #ax = sns.lineplot(x='conc', y='Normalized GFP intensity',marker='o', data=df_fin2,err_style='bars')
@@ -198,9 +236,9 @@ ax.plot(np.linspace(0,2000,40000), func(np.linspace(0,2000,40000), *popt1),'b-')
 #ax= sns.lineplot(x='Time Point', y='GFP intensity', data = df_final_four,label='%s (n = %d)' %(label_4, df_final_four_len))
 #ax= sns.lineplot(x='Time Point', y='GFP intensity', data = df_final_five,label='%s (n = %d)' %(label_5, df_final_five_len))
 #ax= sns.lineplot(x='Time Point', y='GFP intensity', data = df_final_six,label='%s (n = %d)' %(label_6, df_final_six_len))
-ax.set_xlabel('Protein Concentration (nm)', fontweight = 'bold')
-ax.set_ylabel('cPla2 C2 Binding Intensities', fontweight = 'bold')
-ax.set_ylim([-60,2700])
+ax.set_xlabel('Protein Concentration (nM)', fontweight = 'bold')
+ax.set_ylabel('Normalized cPla2 C2 Binding Intensities', fontweight = 'bold')
+ax.set_ylim([-4,64])
 ax.set_xlim([-60,2100])
 ##ax.set_title("%s and %s Binding Profile" %(label_1, label_2))
 ax.legend(fontsize='large')
@@ -211,6 +249,7 @@ plt.tight_layout()
 #plt.show()
 #plt.savefig('C2_versus_mutant_rupture.tif', dpi=400)
 
+# Save as PDF to import into Adobe Illustrator for editing
 fig_save_name = filedialog.asksaveasfilename(parent=root,title="Please select a name for saving figure:",filetypes=[('Graph', '.pdf')])
 plt.savefig(fig_save_name, transparent=True)
 #plt.savefig(fig_save_name, dpi=500)
