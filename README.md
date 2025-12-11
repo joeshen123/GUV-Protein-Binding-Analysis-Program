@@ -165,7 +165,7 @@ The fitting program is written in MATLAB and it is tested in MATLAB R2025a with 
    - **Step 2: Run the ALPS 1-2-eGFP Langmuir Fitting.m for fitting and plotting**
   ![Step 2](Demo%20Step/Fitting/Step2.png)
 
-   - **Step 3: View the plots of equilibrium binding measurements with Langmuir isotherm-fitted curves. Detils of $K_d'$, $B_{\max}$ and $H$ with associated 95% C.I. can be found in the variables created in the MATLAB workspace**
+   - **Step 3: View the plots of equilibrium binding measurements with Langmuir isotherm-fitted curves. Details of $K_d'$, $B_{\max}$ and $H$ with associated 95% C.I. can be found in the variables created in the MATLAB workspace**
   ![Step 3](Demo%20Step/Fitting/Step3.png)
 
 
