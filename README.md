@@ -128,7 +128,7 @@ The fitting program is written in MATLAB and it is tested in MATLAB R2025a with 
 - ### We have provided the demo data and screenshots of the key steps to demonstrate the analysis workflow for both the Image Analysis Program and the Fitting Program.
   - The demo data is stored in the **Demo** directory.
 
-    - Image Analysis Program: The demo dataset is a cropped subset of the original timelapse movies and includes only three timepoints.
+    - Image Analysis Program: The demo dataset is a cropped subset of the original timelapse movies and includes only five timepoints.
 
     - Fitting Program: The demo dataset consists of a single .mat file containing ALPs1–2–eGFP GUV membrane equilibrium-binding measurements.
 
