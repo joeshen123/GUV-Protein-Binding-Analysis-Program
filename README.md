@@ -35,7 +35,7 @@ The 3D component is very similar to the 2D component. The difference is that ins
 ## Program Components
 The bulk of this program is in **Core Programs** directory. Lists below give brief introductions of programs within the directory.
 
-* **Image_Import.py**: Import and Convert image from .ND2 tO .HDF5
+* **Image_Import.py**: Import and Convert image from .ND2 to .HDF5 where all images are stored as numpy arrays.
 
 * **GUV_Anaysis_Module**: Contain all objects and functions to execute analysis pipelines
 
@@ -92,7 +92,7 @@ To quantitatively measure equilibrium adsorption of peripheral membrane proteins
 To describe protein adsorption to the GUV membrane, we use the classical Langmuir model with Hill expansion:
 
 $$
-B_{\text{bound}} = \frac{B_{\max} \, c^{H}}{c^{H} + {K_d'}^{H}}
+B_{\text{bound}} = \frac{B_{\max} \ c^{H}}{c^{H} + {K_d'}^{H}}
 $$
 
 Where:
@@ -149,11 +149,11 @@ The fitting program is written in MATLAB and it is tested in MATLAB R2025a with 
    - **Step 5: Use Napari viewer to visualize the segmented contours drawn on the mid slice of GUV**
   ![Step 5](Demo%20Step/Image%20Analysis/Step5.png)
   
-   - **Step 6: View the finalized quantitative plots of radius and protein adsorption after the analysis **
+   - **Step 6: View the final quantitative plots of radius and protein adsorption obtained from the analysis**
   ![Step 6](Demo%20Step/Image%20Analysis/Step6.png)
   ![Step 7](Demo%20Step/Image%20Analysis/Step7.png)
 
-   - **Step 6: Choose to delete specific GUVs (e.g. broken segmentation) before saving the segmentation masks and analyzed measurements**
+   - **Step 7: Choose to delete specific GUVs (e.g. broken segmentation) before saving the segmentation masks and analyzed measurements**
    ![Step 8](Demo%20Step/Image%20Analysis/Step8.png)
 
 
